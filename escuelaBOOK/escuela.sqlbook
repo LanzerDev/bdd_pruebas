@@ -81,16 +81,11 @@ JOIN alumnos AS a
 JOIN grupo as g 
  ON s.id_grupo = g.id_grupo;
 -- SQLBook: Code
-
+SELECT * FROM alumnos_nombre_grupo;
 -- SQLBook: Code
 #esta consulta muestra todos los alumnos que hay por grupo
-SELECT nombre_grupo, count(alumnos)
-FROM alumnos
-JOIN salon
-ON alumnos.id_alumno = salon.id_alumno
-JOIN grupo 
-ON salon.id_grupo = grupo.id_grupo
-WHERE grupo.nombre_grupo GROUP BY grupo.nombre_grupo;
+SELECT nombre_grupo, count(nombre_grupo)
+FROM alumnos_nombre_grupo GROUP BY nombre_grupo;
 -- SQLBook: Code
 #esta consulta actualiza el id del grupo a 4 cuando los alumnos son menores a 18 anos
 UPDATE salon 
