@@ -1,0 +1,105 @@
+-- SQLBook: Code
+CREATE TABLE alumnos (
+    id_alumno INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(55),
+    apellidos VARCHAR(55),
+    edad INT UNSIGNED
+);
+-- SQLBook: Code
+CREATE TABLE grupo (
+    id_grupo INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    nombre_grupo VARCHAR(55),
+    grado INT UNSIGNED
+);
+-- SQLBook: Code
+CREATE TABLE salon (
+     id_salon INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+     id_alumno INT UNSIGNED NOT NULL,
+     id_grupo INT UNSIGNED NOT NULL,
+     FOREIGN KEY (id_alumno) REFERENCES alumnos(id_alumno),
+     FOREIGN KEY (id_grupo) REFERENCES grupo(id_grupo)
+);
+-- SQLBook: Code
+INSERT INTO alumnos VALUES 
+('1', 'Juan', 'Lopez', 17),
+('2','Maria','Sanchez',19),
+('3','Antonia','Ramirez',19),
+('4','Jesus','Velarde',17);
+-- SQLBook: Code
+INSERT INTO alumnos VALUES ('5', 'Lanzer', 'Lopez', 17);
+-- SQLBook: Code
+INSERT INTO grupo VALUES ('1','Matutino A', 1),
+('2','Matutino B', 1),
+('3','Vespertino A', 2),
+('4','Vespertino B', 2);
+-- SQLBook: Code
+INSERT INTO grupo VALUES ('5','Matutino B', 2);
+-- SQLBook: Code
+INSERT INTO salon(id_alumno, id_grupo) VALUES 
+(1,4),
+(2,4),
+(3,2),
+(4,1);
+-- SQLBook: Code
+INSERT INTO salon(id_alumno, id_grupo) VALUES (5, 5);
+-- SQLBook: Code
+SELECT * FROM alumnos;
+
+SELECT * FROM grupo;
+
+SELECT * FROM salon;
+
+-- SQLBook: Code
+#esta consulta trae cuantos alumnos hay en cada grado
+SELECT grado, count(grado) AS 'alumnos por grado' 
+FROM alumnos
+JOIN salon ON alumnos.id_alumno = salon.id_alumno 
+JOIN grupo ON salon.id_grupo = grupo.id_grupo 
+WHERE grupo.grado 
+GROUP BY grupo.grado;
+-- SQLBook: Code
+#esta consulta borra a los alumnos que estan en el grado 2
+DELETE grupo 
+FROM alumnos 
+INNER JOIN salon ON salon.id_alumno = alumnos.id_alumno 
+JOIN grupo ON salon.id_grupo = grupo.id_grupo 
+WHERE grupo.grado = 2; 
+-- SQLBook: Code
+#se crea la tabla alumnos_nombre_grupo donde se guardaran todos los alumnos y los nombres de su grupo
+
+CREATE TABLE alumnos_nombre_grupo (
+    nombre_alumno varchar(55),
+    nombre_grupo varchar(55)
+);
+-- SQLBook: Code
+#esta consulta muestra a todos los alumnos y el nombre del grupo en el que estan, y crea una tabla con
+#el nombre de alumnos_nombres_grupo
+INSERT INTO alumnos_nombre_grupo SELECT a.nombre, g.nombre_grupo FROM
+salon AS s 
+JOIN alumnos AS a
+ ON s.id_alumno = a.id_alumno
+JOIN grupo as g 
+ ON s.id_grupo = g.id_grupo;
+-- SQLBook: Code
+
+-- SQLBook: Code
+#esta consulta muestra todos los alumnos que hay por grupo
+SELECT nombre_grupo, count(alumnos)
+FROM alumnos
+JOIN salon
+ON alumnos.id_alumno = salon.id_alumno
+JOIN grupo 
+ON salon.id_grupo = grupo.id_grupo
+WHERE grupo.nombre_grupo GROUP BY grupo.nombre_grupo;
+-- SQLBook: Code
+#esta consulta actualiza el id del grupo a 4 cuando los alumnos son menores a 18 anos
+UPDATE salon 
+JOIN alumnos ON salon.id_alumno = alumnos.id_alumno
+JOIN grupo ON salon.id_grupo = grupo.id_grupo
+SET salon.id_grupo = 4 
+WHERE alumnos.edad < 18;
+-- SQLBook: Code
+DROP DATABASE alumnos;
+-- SQLBook: Code
+CREATE DATABASE alumnos;
+USE alumnos;
