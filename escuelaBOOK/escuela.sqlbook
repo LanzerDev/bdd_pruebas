@@ -99,6 +99,7 @@ JOIN grupo ON salon.id_grupo = grupo.id_grupo
 SET salon.id_grupo = 4 
 WHERE alumnos.edad < 18;
 -- SQLBook: Code
+#nota de pc
 DROP DATABASE alumnos;
 -- SQLBook: Code
 CREATE DATABASE alumnos;
